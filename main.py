@@ -10,8 +10,8 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(40))
-    last_name = db.Column(db.String(40))
+    first_name = db.Column(db.String(40), unique=False)
+    last_name = db.Column(db.String(40), unique=False)
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(140), unique=True)
 
@@ -22,15 +22,14 @@ class User(db.Model):
         self.password = password
 
 
-@app.route('/')
+@app.route('/login')
 def index():
     return render_template('login.html')
 
 
-@def
-@def create_account('/create_ccount'):
+@app.route('/create_account')
+def create_account():
     return render_template('create_account.html')
-
 
 
 @app.route('/post_user', methods=['POST'])
