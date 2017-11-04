@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<form method="post" action="/create_user">
+  <header>Create Account</header>
+  <label>First Name:<span>*</span></label>
+  <input id="first_name" name="first_name" type="text"/>
+
+  <label>Last Name: <span>*</span></label>
+  <input id="last_name" name="last_name" type="text"/>
+
+  <label>Username: <span>*</span></label>
+  <input id="username" name="username" type="text"/>
+    <div class="help">At least 6 character</div>
+
+  <label>Password:<span>*</span></label>
+  <input id="password" name="password" type="text"/>
+  <div class="help">Use upper and lowercase letters as well</div>
+
+  <input type="submit" value="Login"/>
+       Don't have an account? Create one <a href="https://google.com">here</a>
+  <style type="text/css">
+  form input[type="submit"]{
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    left: 45%;
+    transform: translate(-50%, 0);
+    font-family: inherit;
+    color: white;
+    background: #FF3838;
+    outline: none;
+    border: none;
+    padding: 5px 15px;
+    font-size: 1.3em;
+    font-weight: 400;
+    border-radius: 3px;
+    box-shadow: 0px 0px 10px rgba(51, 51, 51, 0.4);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+  }
+  </style>
+</form>
+
+
+</body>
+</html>
