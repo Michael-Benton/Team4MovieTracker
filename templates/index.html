@@ -1,7 +1,16 @@
 {% extends "layouts/layout1.html" %}
 {% block title %}
-Our Custom Title
+Index
 {% endblock %}
+
+{% block registerButton %}
+<a class="nav-link js-scroll-trigger" href="/register">Register</a>
+{% endblock %}
+
+{%  block loginButton%}
+<a class="nav-link js-scroll-trigger" href="/login">Login</a>
+{% endblock%}
+
 {% block content %}
     <!-- Header -->
     <header class="masthead">

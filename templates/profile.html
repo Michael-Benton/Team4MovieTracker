@@ -1,13 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-</head>
-<body>
+{% extends "layouts/layout1.html" %}
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+{% include "security/_messages.html" %}
 
-    <h1> {{user.email}} - Profile</h1>
-    <li><a href="{{ url_for('security.logout') }}">Logout</a></li>
+{% block title %}
+Login Page
+{% endblock %}
 
-</body>
-</html>
+{% block pagetitle %}
+Profile
+{% endblock %}
+
+
+{% block addMovieButton %}
+<a class="nav-link js-scroll-trigger" href="/addMovie/<isUser>">Add Movie</a>
+{% endblock %}
+
+{% block profileButton %}
+<a class="nav-link js-scroll-trigger" href="/profile/<email>">Profile</a>
+{% endblock %}
+
+{% block logoutButton %}
+<a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

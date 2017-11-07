@@ -1,0 +1,44 @@
+{% extends "layouts/layout1.html" %}
+
+{% block title %}
+Add Movie/TV Show
+{% endblock %}
+
+{% block pagetitle %}
+Add Movie/TV Show
+{% endblock %}
+
+{% block profileButton %}
+<a class="nav-link js-scroll-trigger" href="/profile/<email>">Profile</a>
+{% endblock %}
+
+{% block logoutButton %}
+<a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<h1>{{ _('Login') }}</h1>
+<form method="POST" action="/post_movieTVShow">
+  <br /><br /><br />
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" name="title" id="title"
+
+        <label for="releaseDate">Release Date:</label>
+        <input type="text" class="form-control" name="releaseDate" id="releaseDate"
+
+        <label for="producer">Producer:</label>
+        <input type="text" class="form-control" name="producer" id="producer"
+
+        <label for="description">Description:</label>
+        <input type="text" class="form-control" name="description" id="description"
+
+        <label for="genre">Genre:</label>
+        <input type="text" class="form-control" name="genre" id="genre"
+               <br />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+{% endblock %}
