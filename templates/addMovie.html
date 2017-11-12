@@ -8,14 +8,6 @@ Add Movie/TV Show
 Add Movie/TV Show
 {% endblock %}
 
-{% block profileButton %}
-<a class="nav-link js-scroll-trigger" href="/profile/<email>">Profile</a>
-{% endblock %}
-
-{% block logoutButton %}
-<a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
-{% endblock %}
-
 {% block content %}
 <div class="container">
 <h1>{{ _('Login') }}</h1>
@@ -26,7 +18,7 @@ Add Movie/TV Show
         <input type="text" class="form-control" name="title" id="title"
 
         <label for="releaseDate">Release Date:</label>
-        <input type="text" class="form-control" name="releaseDate" id="releaseDate"
+        <input type="date" class="form-control" name="releaseDate" id="releaseDate"
 
         <label for="producer">Producer:</label>
         <input type="text" class="form-control" name="producer" id="producer"

@@ -50,17 +50,14 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary=roles_users,backref=db.backref('users', lazy='dynamic'))
 
 
-
-
-
 class MovieTV(db.Model):
     #__searchable__ = ['title', 'producer', 'description']
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), unique=True)
-    releaseDate = db.Column(db.Integer)
+    releaseDate = db.Column(db.Date)
     producer = db.Column(db.String(100))
-    description = db.Column(db.String(300), unique=True)
+    description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
 
 
@@ -118,10 +115,10 @@ def post_user():
 
 @app.route('/post_movieTVShow', methods=['POST'])
 def post_movieTVShow():
-    newItem = MovieTV(request.form['title'], request.form['releaseDate'], request.form['producer'], request.form['description'], request.form['genre'])
+    newItem = MovieTV(title=request.form['title'],releaseDate=request.form['releaseDate'], producer=request.form['producer'], description=request.form['description'], genre=request.form['genre'])
     db.session.add(newItem)
     db.session.commit()
-    return redirect(url_for('profile/<email>'))
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
