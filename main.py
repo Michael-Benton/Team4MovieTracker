@@ -1,11 +1,9 @@
-from flask import Flask
+from flask import Flask, render_template, url_for, redirect, request, abort
 from flask_sqlalchemy import SQLAlchemy
-from flask import render_template, url_for, redirect, request, flash, abort, get_flashed_messages
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
 from flask_mail import Mail
 from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
-#import flask_whooshalchemy as wa
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost/flaskmovie'
@@ -28,8 +26,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 
 roles_users = db.Table('roles_users',
-        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+                       db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 
 class Role(db.Model, RoleMixin):
@@ -47,21 +45,18 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean(), default=False)
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Role', secondary=roles_users,backref=db.backref('users', lazy='dynamic'))
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 
 class MovieTV(db.Model):
-    #__searchable__ = ['title', 'producer', 'description']
-
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'MovieTV'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), unique=True)
     releaseDate = db.Column(db.Date)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
-
-
-#wa.whoosh_index(app, MovieTV)
+    image = db.Column(db.String(300))
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -76,11 +71,11 @@ security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
 
 @login_manager.user_loader
 def load_user(id):
-        return User.query.get(int(id))
+    return User.query.get(int(id))
 
 
 def require_admin():
-    if current_user.is_admin == False:
+    if not current_user.is_admin:
         abort(403)
 
 
@@ -96,6 +91,24 @@ def addMovie():
     require_admin()
     error = None
     return render_template('addMovie.html', error=error)
+
+
+@app.route('/search', methods=["GET"])
+def search():
+    user_input = request.args.get("query")
+    search_results = MovieTV.query.all()
+    i = 0
+    j = 0
+    listOfMovies = []
+    while j < len(search_results):
+        if search_results[i].title.lower() == user_input.lower() or \
+           search_results[i].producer.lower() == user_input.lower() or \
+           search_results[i].genre.lower() == user_input.lower():
+            print(search_results[i].title)
+            listOfMovies.append(search_results[i])
+        i += 1
+        j += 1
+    return render_template("index.html", movies=listOfMovies)
 
 
 @app.route('/profile/<email>')
@@ -115,7 +128,9 @@ def post_user():
 
 @app.route('/post_movieTVShow', methods=['POST'])
 def post_movieTVShow():
-    newItem = MovieTV(title=request.form['title'],releaseDate=request.form['releaseDate'], producer=request.form['producer'], description=request.form['description'], genre=request.form['genre'])
+    newItem = MovieTV(title=request.form['title'], releaseDate=request.form['releaseDate'],
+                      producer=request.form['producer'], description=request.form['description'],
+                      genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))

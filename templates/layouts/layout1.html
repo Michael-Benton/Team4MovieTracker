@@ -31,7 +31,10 @@
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <i class="fa fa-bars"></i>
         </button>
-        <input type="text" name="search" placeholder="Search for a Movie/TV Show..", class="form-control">
+        <form class="form-inline" method="GET" action="search">
+          <input type="text" id="query" name="query" placeholder="Search for a Movie/TV Show..", class="form-inline">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated != True %}
