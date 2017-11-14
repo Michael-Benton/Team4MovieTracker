@@ -48,9 +48,10 @@
               <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="/logout">Logout</a>
               </li>
+              {% if current_user.is_admin == True %}
               <li class="nav-item">
                 <a class="nav-link js-scroll-trigger" href="/addMovie">Add Movie</a>
-              </li>
+              {% endif %}
             {% endif %}
           </ul>
         </div>
