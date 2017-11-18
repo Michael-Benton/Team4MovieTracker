@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc123@localhost:5434/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = b"xxx"
@@ -48,11 +48,21 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 
-class MovieTV(db.Model):
-    __tablename__ = 'MovieTV'
+class Movie(db.Model):
+    __tablename__ = 'Movie'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), unique=True)
     releaseDate = db.Column(db.Date)
+    producer = db.Column(db.String(100))
+    description = db.Column(db.String(300))
+    genre = db.Column(db.String(50))
+    image = db.Column(db.String(300))
+
+class TV(db.Model):
+    __tablename__ = 'TV'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(200), unique=True)
+    releaseDateTime = db.Column(db.DateTime)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
@@ -92,11 +102,17 @@ def addMovie():
     error = None
     return render_template('addMovie.html', error=error)
 
+@app.route('/addTV', methods=['GET', 'POST'])
+@login_required
+def addTV():
+    require_admin()
+    error = None
+    return render_template('addTV.html', error=error)
 
 @app.route('/search', methods=["GET"])
 def search():
     user_input = request.args.get("query")
-    search_results = MovieTV.query.all()
+    search_results = Movie.query.all()
     i = 0
     j = 0
     listOfMovies = []
@@ -126,15 +142,23 @@ def post_user():
     return redirect(url_for('login'))
 
 
-@app.route('/post_movieTVShow', methods=['POST'])
-def post_movieTVShow():
-    newItem = MovieTV(title=request.form['title'], releaseDate=request.form['releaseDate'],
+@app.route('/post_Movie', methods=['POST'])
+def post_Movie():
+    newItem = Movie(title=request.form['title'], releaseDate=request.form['releaseDate'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))
 
+@app.route('/post_TVShow', methods=['POST'])
+def post_TVShow():
+    newItem = MovieTV(title=request.form['title'], releaseDate=request.form['releaseDateTime'],
+                      producer=request.form['producer'], description=request.form['description'],
+                      genre=request.form['genre'], image=request.form['image'])
+    db.session.add(newItem)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run()
