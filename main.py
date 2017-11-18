@@ -57,6 +57,9 @@ class Movie(db.Model):
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
     image = db.Column(db.String(300))
+    is_movie = db.Column(db.Boolean(), default=True)
+    is_tvshow = db.Column(db.Boolean(), default=False)
+
 
 class TV(db.Model):
     __tablename__ = 'TV'
@@ -67,6 +70,8 @@ class TV(db.Model):
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
     image = db.Column(db.String(300))
+    is_movie = db.Column(db.Boolean(), default=False)
+    is_tvshow = db.Column(db.Boolean(), default=True)
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -126,10 +131,11 @@ def search():
         i += 1
         j += 1
     return render_template("index.html", movies=listOfMovies)	
-	
+
+
 @app.route('/getRecommendations', methods=["GET"])
 def getRecommendations():
-	user_watchList = getUserWatchList()
+    user_watchList = getUserWatchList()
 	last_entry = user_watchList[-1]
 	last_entry_genre = last_entry.genre
 	all_movies = MovieTV.query.all()
@@ -140,7 +146,8 @@ def getRecommendations():
 		if (len(recommendationList) == 5):
 			break
 	return rend_template("index.html", recommendations=recommendationList)
-	
+
+
 @app.route('/getUserWatchList', methods=["GET"])
 def getUserWatchList():
 	user_watchList = []
