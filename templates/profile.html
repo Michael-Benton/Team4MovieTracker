@@ -50,4 +50,18 @@ clear: both;
 </div>
 </div>
 </body>
+<section id="portfolio">
+      <div class="container">
+        <h2 class="text-center">Recommendations</h2>
+        <hr class="star-primary">
+        <div class="row">
+          <div class="col-sm-4 portfolio-item">
+            {% for recommendation in recommendations %}
+            <h2 class="movie-title">{{ recommendation.title }}</h2>
+            <p><a href="https://imgbb.com/"><img src="{{ recommendation.image }}" border="0"></a><br /><a target='_blank' href='https://imgbb.com/'></a><br /></p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
 {% endblock %}

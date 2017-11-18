@@ -125,18 +125,27 @@ def search():
             listOfResults.append(search_results_movie[i])
         i += 1
         j += 1
-    i = 0
-    j = 0
-    while j < len(search_results_tv):
-        if search_results_tv[i].title.lower() == user_input.lower() or \
-           search_results_tv[i].producer.lower() == user_input.lower() or \
-           search_results_tv[i].genre.lower() == user_input.lower():
-            print(search_results_tv[i].title)
-            listOfResults.append(search_results_tv[i])
-        i += 1
-        j += 1
-    return render_template("index.html", results=listOfResults)
-
+    return render_template("index.html", movies=listOfMovies)	
+	
+@app.route('/getRecommendations', methods=["GET"])
+def getRecommendations():
+	user_watchList = getUserWatchList()
+	last_entry = user_watchList[-1]
+	last_entry_genre = last_entry.genre
+	all_movies = MovieTV.query.all()
+	recommendationList =[] 
+	for movie in all_movies:
+		if movie.genre == last_entry_genre:
+			recommendationList.append(movie)
+		if (len(recommendationList) == 5):
+			break
+	return rend_template("index.html", recommendations=recommendationList)
+	
+@app.route('/getUserWatchList', methods=["GET"])
+def getUserWatchList():
+	user_watchList = []
+	
+	return user_watchList
 @app.route('/profile/<email>')
 @login_required
 def profile(email):
