@@ -1,29 +1,21 @@
 {% extends "layouts/layout1.html" %}
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+{% include "security/_messages.html" %}
+
 {% block title %}
-Index
+Movie/TV Show Description
+{% endblock %}
+
+{% block pagetitle %}
+Information
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
-    <header class="masthead">
-      <div class="container">
-        <img class="img-fluid" src="/static/img/starWars.jpeg" alt="Star Wars Movie Poster">
-        <div class="intro-text">
-          <span class="name">Team 4 Movie Tracker</span>
-          <hr class="star-light">
-          <span class="skills">Find your favorite movies and shows!</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- Portfolio Grid Section -->
+<!-- Portfolio Grid Section -->
     <section id="portfolio">
       <div class="container">
-        <h2 class="text-center">Search Results</h2>
-        <hr class="star-primary">
         <div class="row">
           <div class="col-sm-4 portfolio-item">
-            {% for result in results %}
             <h2 class="movie-title">{{ result.title }}</h2>
             <p>{{ result.description }}</p>
             <p>{{ result.releaseDate }}</p>
@@ -31,7 +23,6 @@ Index
             <p>{{ result.genre }}</p>
             <p><a href="/MovieTVShowDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
           </div>
-          {% endfor %}
         </div>
       </div>
     </section>

@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc123@localhost:5434/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = b"xxx"
@@ -159,6 +159,32 @@ def post_user():
     db.session.add(user)
     db.session.commit()
     return redirect(url_for('login'))
+
+
+@app.route('/MovieTVShowDescription/<string:title>')
+def MovieTVShowDescription(title):
+    movieItems = Movie.query.all()
+    tvItems = TV.query.all()
+    i = 0
+    j = 0
+
+    while j < len(movieItems):
+        if movieItems[i].title == title:
+            print(movieItems[i].title)
+            return render_template("MovieTVShowDescription.html", result=movieItems[i])
+        i+= 1
+        j+= 1
+
+    i = 0
+    j = 0
+
+    while j < len(tvItems):
+        if tvItems[i].title == title:
+            return render_template("MovieTVShowDescription.html", result=tvItems[i])
+        i += 1
+        j += 1
+
+    return redirect(url_for('index'))
 
 
 @app.route('/post_Movie', methods=['POST'])
