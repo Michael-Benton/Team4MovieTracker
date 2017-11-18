@@ -23,13 +23,13 @@ Index
         <hr class="star-primary">
         <div class="row">
           <div class="col-sm-4 portfolio-item">
-            {% for movie in movies %}
-            <h2 class="movie-title">{{ movie.title }}</h2>
-            <p>{{ movie.description }}</p>
-            <p>{{ movie.releaseDate }}</p>
-            <p>{{ movie.producer }}</p>
-            <p>{{ movie.genre }}</p>
-            <p><a href="https://imgbb.com/"><img src="{{ movie.image }}" border="0"></a><br /><a target='_blank' href='https://imgbb.com/'></a><br /></p>
+            {% for result in results %}
+            <h2 class="movie-title">{{ result.title }}</h2>
+            <p>{{ result.description }}</p>
+            <p>{{ result.releaseDate }}</p>
+            <p>{{ result.producer }}</p>
+            <p>{{ result.genre }}</p>
+            <p><a href="https://imgbb.com/"><img src="{{ result.image }}" border="0"></a><br /><a target='_blank' href='https://imgbb.com/'></a><br /></p>
           </div>
           {% endfor %}
         </div>

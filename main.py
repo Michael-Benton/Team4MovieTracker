@@ -112,19 +112,30 @@ def addTV():
 @app.route('/search', methods=["GET"])
 def search():
     user_input = request.args.get("query")
-    search_results = Movie.query.all()
+    search_results_movie = Movie.query.all()
+    search_results_tv = TV.query.all()
     i = 0
     j = 0
-    listOfMovies = []
-    while j < len(search_results):
-        if search_results[i].title.lower() == user_input.lower() or \
-           search_results[i].producer.lower() == user_input.lower() or \
-           search_results[i].genre.lower() == user_input.lower():
-            print(search_results[i].title)
-            listOfMovies.append(search_results[i])
+    listOfResults = []
+    while j < len(search_results_movie):
+        if search_results_movie[i].title.lower() == user_input.lower() or \
+           search_results_movie[i].producer.lower() == user_input.lower() or \
+           search_results_movie[i].genre.lower() == user_input.lower():
+            print(search_results_movie[i].title)
+            listOfResults.append(search_results_movie[i])
         i += 1
         j += 1
-    return render_template("index.html", movies=listOfMovies)
+    i = 0
+    j = 0
+    while j < len(search_results_tv):
+        if search_results_tv[i].title.lower() == user_input.lower() or \
+           search_results_tv[i].producer.lower() == user_input.lower() or \
+           search_results_tv[i].genre.lower() == user_input.lower():
+            print(search_results_tv[i].title)
+            listOfResults.append(search_results_tv[i])
+        i += 1
+        j += 1
+    return render_template("index.html", results=listOfResults)
 
 @app.route('/profile/<email>')
 @login_required
