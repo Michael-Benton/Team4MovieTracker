@@ -48,11 +48,21 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 
-class MovieTV(db.Model):
-    __tablename__ = 'MovieTV'
+class Movie(db.Model):
+    __tablename__ = 'Movie'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), unique=True)
     releaseDate = db.Column(db.Date)
+    producer = db.Column(db.String(100))
+    description = db.Column(db.String(300))
+    genre = db.Column(db.String(50))
+    image = db.Column(db.String(300))
+
+class TV(db.Model):
+    __tablename__ = 'TV'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(200), unique=True)
+    releaseDateTime = db.Column(db.DateTime)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
@@ -92,23 +102,31 @@ def addMovie():
     error = None
     return render_template('addMovie.html', error=error)
 
+@app.route('/addTV', methods=['GET', 'POST'])
+@login_required
+def addTV():
+    require_admin()
+    error = None
+    return render_template('addTV.html', error=error)
 
 @app.route('/search', methods=["GET"])
 def search():
     user_input = request.args.get("query")
-    search_results = MovieTV.query.all()
+    search_results_movie = Movie.query.all()
+    search_results_tv = TV.query.all()
     i = 0
     j = 0
-    listOfMovies = []
-    while j < len(search_results):
-        if search_results[i].title.lower() == user_input.lower() or \
-           search_results[i].producer.lower() == user_input.lower() or \
-           search_results[i].genre.lower() == user_input.lower():
-            print(search_results[i].title)
-            listOfMovies.append(search_results[i])
+    listOfResults = []
+    while j < len(search_results_movie):
+        if search_results_movie[i].title.lower() == user_input.lower() or \
+           search_results_movie[i].producer.lower() == user_input.lower() or \
+           search_results_movie[i].genre.lower() == user_input.lower():
+            print(search_results_movie[i].title)
+            listOfResults.append(search_results_movie[i])
         i += 1
         j += 1
-    return render_template("index.html", movies=listOfMovies)
+    return render_template("index.html", movies=listOfMovies)	
+	
 @app.route('/getRecommendations', methods=["GET"])
 def getRecommendations():
 	user_watchList = getUserWatchList()
@@ -122,12 +140,12 @@ def getRecommendations():
 		if (len(recommendationList) == 5):
 			break
 	return rend_template("index.html", recommendations=recommendationList)
+	
 @app.route('/getUserWatchList', methods=["GET"])
 def getUserWatchList():
 	user_watchList = []
 	
 	return user_watchList
-	
 @app.route('/profile/<email>')
 @login_required
 def profile(email):
@@ -143,15 +161,23 @@ def post_user():
     return redirect(url_for('login'))
 
 
-@app.route('/post_movieTVShow', methods=['POST'])
-def post_movieTVShow():
-    newItem = MovieTV(title=request.form['title'], releaseDate=request.form['releaseDate'],
+@app.route('/post_Movie', methods=['POST'])
+def post_Movie():
+    newItem = Movie(title=request.form['title'], releaseDate=request.form['releaseDate'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))
 
+@app.route('/post_TVShow', methods=['POST'])
+def post_TVShow():
+    newItem = TV(title=request.form['title'], releaseDateTime=request.form['releaseDateTime'],
+                      producer=request.form['producer'], description=request.form['description'],
+                      genre=request.form['genre'], image=request.form['image'])
+    db.session.add(newItem)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run()
