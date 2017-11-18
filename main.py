@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc123@localhost:5434/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Silvertigger97!@localhost:5432/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = b"xxx"
@@ -126,7 +126,6 @@ def search():
         j += 1
     return render_template("index.html", movies=listOfMovies)
 
-
 @app.route('/profile/<email>')
 @login_required
 def profile(email):
@@ -153,7 +152,7 @@ def post_Movie():
 
 @app.route('/post_TVShow', methods=['POST'])
 def post_TVShow():
-    newItem = MovieTV(title=request.form['title'], releaseDate=request.form['releaseDateTime'],
+    newItem = TV(title=request.form['title'], releaseDate=request.form['releaseDateTime'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
