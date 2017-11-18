@@ -152,7 +152,7 @@ def post_Movie():
 
 @app.route('/post_TVShow', methods=['POST'])
 def post_TVShow():
-    newItem = TV(title=request.form['title'], releaseDate=request.form['releaseDateTime'],
+    newItem = TV(title=request.form['title'], releaseDateTime=request.form['releaseDateTime'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
