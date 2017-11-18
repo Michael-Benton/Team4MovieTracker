@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:abc123@localhost:5434/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = b"xxx"
@@ -109,8 +109,25 @@ def search():
         i += 1
         j += 1
     return render_template("index.html", movies=listOfMovies)
-
-
+@app.route('/getRecommendations', methods=["GET"])
+def getRecommendations():
+	user_watchList = getUserWatchList()
+	last_entry = user_watchList[-1]
+	last_entry_genre = last_entry.genre
+	all_movies = MovieTV.query.all()
+	recommendationList =[] 
+	for movie in all_movies:
+		if movie.genre == last_entry_genre:
+			recommendationList.append(movie)
+		if (len(recommendationList) == 5):
+			break
+	return rend_template("index.html", recommendations=recommendationList)
+@app.route('/getUserWatchList', methods=["GET"])
+def getUserWatchList():
+	user_watchList = []
+	
+	return user_watchList
+	
 @app.route('/profile/<email>')
 @login_required
 def profile(email):
