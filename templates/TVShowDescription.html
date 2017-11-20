@@ -1,0 +1,36 @@
+{% extends "layouts/layout1.html" %}
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+{% include "security/_messages.html" %}
+
+{% block title %}
+TV Show Description
+{% endblock %}
+
+{% block pagetitle %}
+Information
+{% endblock %}
+
+{% block content %}
+<!-- Portfolio Grid Section -->
+    <section id="portfolio">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 portfolio-item">
+              {% if error %}
+            <p class=error><strong>Error:</strong> {{ error }}
+            {% endif %}
+            <h2 class="TVShow-title">{{ result.title }}</h2>
+            <p>{{ result.description }}</p>
+            <p>{{ result.releaseDate }}</p>
+            <p>{{ result.producer }}</p>
+            <p>{{ result.genre }}</p>
+            <p><a href="/TVShowDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
+              <form id="add-item" action="/addToWatchList" method="post">
+            <input type="hidden" name="movie_id" value="{{ result.tv_id }}">
+            <button type="submit" class="btn btn-primary">Add to Watch List</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}

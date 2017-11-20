@@ -3,7 +3,7 @@
 {% include "security/_messages.html" %}
 
 {% block title %}
-Movie/TV Show Description
+Movie Description
 {% endblock %}
 
 {% block pagetitle %}
@@ -11,8 +11,12 @@ Information
 {% endblock %}
 
 {% block content %}
+
 <!-- Portfolio Grid Section -->
     <section id="portfolio">
+      {% if error %}
+          <p class=error><strong>Error:</strong> {{ error }}
+            {% endif %}
       <div class="container">
         <div class="row">
           <div class="col-sm-4 portfolio-item">
@@ -21,7 +25,11 @@ Information
             <p>{{ result.releaseDate }}</p>
             <p>{{ result.producer }}</p>
             <p>{{ result.genre }}</p>
-            <p><a href="/MovieTVShowDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
+            <p><a href="/MovieDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
+              <form id="add-item" action="/addToWatchList" method="post">
+            <input type="hidden" name="result" value="{{ result.movie_id }}">
+            <button type="submit" class="btn btn-primary">Add to Watch List</button>
+          </form>
           </div>
         </div>
       </div>

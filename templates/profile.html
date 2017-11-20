@@ -41,6 +41,11 @@ clear: both;
 {% for movie in movies %}
 <h2 class="movie-title">{{ movie.title }}</h2>
 <p>{{ movie.releaseDate }}</p>
+    <form id="delete-item" action="/deleteFromWatchList" method="post">
+            <input type="hidden" name="movie" value="{{ movie.movie_id }}">
+            <button type="submit" class="btn btn-primary">Remove from Watch List</button>
+        <br /> <br />
+          </form>
 {% endfor %}
 </p>
 </div>
