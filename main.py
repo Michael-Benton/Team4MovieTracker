@@ -124,35 +124,51 @@ def search():
     listOfResults = []
     while j < len(search_results_movie):
         if search_results_movie[i].title.lower() == user_input.lower() or \
-           search_results_movie[i].producer.lower() == user_input.lower() or \
-           search_results_movie[i].genre.lower() == user_input.lower():
+                        search_results_movie[i].producer.lower() == user_input.lower() or \
+                        search_results_movie[i].genre.lower() == user_input.lower():
             print(search_results_movie[i].title)
             listOfResults.append(search_results_movie[i])
         i += 1
         j += 1
-    return render_template("index.html", movies=listOfMovies)	
+    i = 0
+    j = 0
+    while j < len(search_results_tv):
+        if search_results_tv[i].title.lower() == user_input.lower() or \
+                        search_results_tv[i].producer.lower() == user_input.lower() or \
+                        search_results_tv[i].genre.lower() == user_input.lower():
+            print(search_results_tv[i].title)
+            listOfResults.append(search_results_tv[i])
+        i += 1
+        j += 1
+    return render_template("index.html", results=listOfResults)
 
 
 @app.route('/getRecommendations', methods=["GET"])
 def getRecommendations():
-    user_watchList = getUserWatchList()
-	last_entry = user_watchList[-1]
-	last_entry_genre = last_entry.genre
-	all_movies = MovieTV.query.all()
-	recommendationList =[] 
-	for movie in all_movies:
-		if movie.genre == last_entry_genre:
-			recommendationList.append(movie)
-		if (len(recommendationList) == 5):
-			break
-	return rend_template("index.html", recommendations=recommendationList)
+    user_watchlist = getUserWatchList()
+    last_entry = user_watchlist[-1]
+    last_entry_genre = last_entry.genre
+    all_movies = Movie.query.all()
+    all_tv = TV.query.all()
+    recommendation_list =[]
+    for movie in all_movies:
+        if movie.genre == last_entry_genre:
+            recommendation_list.append(movie)
+        if len(recommendation_list) == 5:
+            break
+    for tv in all_tv:
+        if tv.genre == last_entry_genre:
+            recommendation_list.append(tv)
+        if len(recommendation_list) == 10:
+            break
+    return render_template("index.html", recommendations=recommendation_list)
 
 
 @app.route('/getUserWatchList', methods=["GET"])
 def getUserWatchList():
-	user_watchList = []
-	
-	return user_watchList
+    user_watchList = []
+
+    return user_watchList
 @app.route('/profile/<email>')
 @login_required
 def profile(email):
@@ -198,8 +214,8 @@ def MovieTVShowDescription(title):
 @app.route('/post_Movie', methods=['POST'])
 def post_Movie():
     newItem = Movie(title=request.form['title'], releaseDate=request.form['releaseDate'],
-                      producer=request.form['producer'], description=request.form['description'],
-                      genre=request.form['genre'], image=request.form['image'])
+                    producer=request.form['producer'], description=request.form['description'],
+                    genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))
@@ -207,8 +223,8 @@ def post_Movie():
 @app.route('/post_TVShow', methods=['POST'])
 def post_TVShow():
     newItem = TV(title=request.form['title'], releaseDateTime=request.form['releaseDateTime'],
-                      producer=request.form['producer'], description=request.form['description'],
-                      genre=request.form['genre'], image=request.form['image'])
+                 producer=request.form['producer'], description=request.form['description'],
+                 genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))
