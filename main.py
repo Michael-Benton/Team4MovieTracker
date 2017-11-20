@@ -80,7 +80,7 @@ class Movie(db.Model):
     __tablename__ = 'Movie'
 
     movie_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), unique=True)
+    title = db.Column(db.String(200))
     releaseDate = db.Column(db.Date)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
@@ -94,7 +94,7 @@ class TV(db.Model):
     __tablename__ = 'TV'
 
     tv_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(200), unique=True)
+    title = db.Column(db.String(200))
     releaseDateTime = db.Column(db.DateTime)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
@@ -242,7 +242,7 @@ def addToWatchList():
             error = 'TV Show is already in your watchlist'
             return redirect(url_for('TVShowDescription', title=show.title, error=error))
 
-        showItem = watchList(user_id=current_user.id, movie_id=None, tv_id=show.tv_id,title=show.title, releaseDate=show.releaseDate, producer=show.producer, description=show.description, genre=show.genre, image=show.image)
+        showItem = watchList(user_id=current_user.id, movie_id=None, tv_id=show.tv_id,title=show.title, releaseDate=show.releaseDateTime, producer=show.producer, description=show.description, genre=show.genre, image=show.image)
         db.session.add(showItem)
         db.session.commit()
 
@@ -252,9 +252,19 @@ def addToWatchList():
 
 @app.route('/deleteFromWatchList', methods=['POST'])
 def deleteFromWatchList():
-    deletedItem = watchList.query.filter_by(user_id=current_user.id, id=request.form.get('movie.movie_id'))
-    db.session.delete(deletedItem)
-    db.commit()
+    itemToBeDeleted = request.form.get('id')
+    itemsInWatchList = watchList.query.all()
+    i = 0
+
+    while i < len(itemsInWatchList):
+        if int(itemToBeDeleted) == int(itemsInWatchList[i].id):
+            db.session.delete(itemsInWatchList[i])
+            db.session.commit()
+        i += 1
+
+    return redirect(url_for('profile', id=current_user.id, movies=watchList.query.all()))
+
+
 
 @app.route('/getUserWatchList', methods=["GET"])
 def getUserWatchList():
