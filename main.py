@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
+app.config['SECURITY_RECOVERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = b"xxx"
 app.config['SECURITY_PASSWORD_HASH'] = "sha512_crypt"
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -203,8 +204,10 @@ def addToWatchList():
     i = 0
     j = 0
 
+    print(request.form.get('id'))
+
     while j < len(movie_list):
-        if int(movie_list[i].movie_id) == int(request.form.get('result')):
+        if int(movie_list[i].movie_id) == int(request.form.get('id')):
             movie = movie_list[i]
 
         i += 1
@@ -214,7 +217,7 @@ def addToWatchList():
     j = 0
 
     while j < len(tv_list):
-        if int(tv_list[i].tv_id) == int(request.form.get('result')):
+        if int(tv_list[i].tv_id) == int(request.form.get('id')):
             show = tv_list[i]
         else:
             show = None
