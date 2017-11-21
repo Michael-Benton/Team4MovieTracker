@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Silvertigger97!@localhost:5432/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = b"xxx"
@@ -204,7 +204,7 @@ def addToWatchList():
     j = 0
 
     while j < len(movie_list):
-        if int(movie_list[i].movie_id) == int(request.form.get('result')):
+        if int(movie_list[i].movie_id) == int(request.form.get('id')):
             movie = movie_list[i]
 
         i += 1
@@ -214,7 +214,7 @@ def addToWatchList():
     j = 0
 
     while j < len(tv_list):
-        if int(tv_list[i].tv_id) == int(request.form.get('result')):
+        if int(tv_list[i].tv_id) == int(request.form.get('id')):
             show = tv_list[i]
         else:
             show = None
