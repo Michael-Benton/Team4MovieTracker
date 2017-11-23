@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Silvertigger97!@localhost:5432/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_RECOVERABLE'] = True
@@ -96,7 +96,7 @@ class TV(db.Model):
 
     tv_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200))
-    releaseDateTime = db.Column(db.DateTime)
+    releaseDate = db.Column(db.DateTime)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
@@ -178,21 +178,6 @@ def search():
     return render_template("index.html", results=listOfResults)
 
 
-@app.route('/getRecommendations', methods=["GET"])
-def getRecommendations():
-    user_watchList = getUserWatchList()
-    last_entry = user_watchList[-1]
-    last_entry_genre = last_entry.genre
-    all_movies = Movie.query.all()
-    recommendationList =[]
-    for movie in all_movies:
-        if movie.genre == last_entry_genre:
-            recommendationList.append(movie)
-        if (len(recommendationList) == 5):
-            break
-    return render_template("index.html", recommendations=recommendationList)
-
-
 @app.route('/addToWatchList', methods=["POST"])
 @login_required
 def addToWatchList():
@@ -203,8 +188,6 @@ def addToWatchList():
     show = None
     i = 0
     j = 0
-
-    print(request.form.get('id'))
 
     while j < len(movie_list):
         if int(movie_list[i].movie_id) == int(request.form.get('id')):
@@ -231,7 +214,6 @@ def addToWatchList():
             error = 'Movie is already in your watchlist'
             return redirect(url_for('MovieDescription', title=movie.title, error=error))
 
-        print(movie.title)
         movieItem = watchList(user_id=current_user.id,movie_id=movie.movie_id, tv_id=None, title=movie.title, releaseDate=movie.releaseDate, producer=movie.producer, description=movie.description, genre=movie.genre, image=movie.image)
         db.session.add(movieItem)
         db.session.commit()
@@ -245,7 +227,7 @@ def addToWatchList():
             error = 'TV Show is already in your watchlist'
             return redirect(url_for('TVShowDescription', title=show.title, error=error))
 
-        showItem = watchList(user_id=current_user.id, movie_id=None, tv_id=show.tv_id,title=show.title, releaseDate=show.releaseDateTime, producer=show.producer, description=show.description, genre=show.genre, image=show.image)
+        showItem = watchList(user_id=current_user.id, movie_id=None, tv_id=show.tv_id,title=show.title, releaseDate=show.releaseDate, producer=show.producer, description=show.description, genre=show.genre, image=show.image)
         db.session.add(showItem)
         db.session.commit()
 
@@ -279,17 +261,66 @@ def getUserWatchList():
 @app.route('/profile/<id>')
 @login_required
 def profile(id):
-    user = User.query.filter_by(id=id).first()
-    search_results_movies = watchList.query.all()
+    watchList_results = watchList.query.all()
     listItems = []
+    recommendationList = []
+    movie_list = []
+    tv_show_list = []
     i = 0
 
-    while i < len(search_results_movies):
-        if int(search_results_movies[i].user_id) == int(id):
-            listItems.append(search_results_movies[i])
-        i += 1
+    if len(watchList_results) != 0:
+        while i < len(watchList_results):
+            if int(watchList_results[i].user_id) == int(id):
+                listItems.append(watchList_results[i])
+            i += 1
 
-    return render_template('profile.html', movies=listItems)
+        last_entry = listItems[len(listItems) - 1]
+        last_entry_genre = last_entry.genre
+        all_movies = Movie.query.all()
+        all_shows = TV.query.all()
+
+
+        i = 0
+
+        while i < len(watchList_results):
+            j = 0
+            while j < len(all_movies):
+                if all_movies[j].movie_id == watchList_results[i].movie_id:
+                    all_movies.remove(all_movies[j])
+                j += 1
+            i += 1
+
+        i = 0
+
+        while i < len(watchList_results):
+            j = 0
+            while j < len(all_shows):
+                if all_shows[j].tv_id == watchList_results[i].tv_id:
+                    all_shows.remove(all_shows[j])
+                j += 1
+            i += 1
+
+        i = 0
+
+        while i < len(all_movies):
+            if all_movies[i].genre == last_entry_genre:
+                movie_list.append(all_movies[i])
+            if len(movie_list) == 5:
+                break
+            i += 1
+
+        i = 0
+
+        while i < len(all_shows):
+            if all_shows[i].genre == last_entry_genre:
+                tv_show_list.append(all_shows[i])
+            if len(tv_show_list) == 5:
+                break
+            i += 1
+
+        recommendationList = tv_show_list + movie_list
+
+    return render_template('profile.html', movies=listItems, recommendations=recommendationList)
 
 
 @app.route('/post_user', methods=['POST'])
@@ -342,7 +373,7 @@ def post_Movie():
 
 @app.route('/post_TVShow', methods=['POST'])
 def post_TVShow():
-    newItem = TV(title=request.form['title'], releaseDateTime=request.form['releaseDateTime'],
+    newItem = TV(title=request.form['title'], releaseDate=request.form['releaseDate'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
     db.session.add(newItem)

@@ -448,3 +448,7 @@ footer {
 .btn:active,
 .btn:focus {
   outline: none; }
+
+div.container {
+    margin-top: 100px;
+}

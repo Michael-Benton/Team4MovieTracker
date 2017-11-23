@@ -26,7 +26,7 @@ Information
             <p>{{ result.genre }}</p>
             <p><a href="/TVShowDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
               <form id="add-item" action="/addToWatchList" method="post">
-            <input type="hidden" name="tv_id" value="{{ result.tv_id }}">
+            <input type="hidden" name="id" value="{{ result.tv_id }}">
             <button type="submit" class="btn btn-primary">Add to Watch List</button>
           </form>
           </div>
