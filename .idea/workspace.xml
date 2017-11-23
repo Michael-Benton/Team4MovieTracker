@@ -3,16 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2ed22cec-3de8-4548-b0d3-fd5d6a2bf341" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/freelancer.css" afterPath="$PROJECT_DIR$/static/css/freelancer.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/freelancer.min.css" afterPath="$PROJECT_DIR$/static/css/freelancer.min.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/style.css" afterPath="$PROJECT_DIR$/static/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/TVShowDescription.html" afterPath="$PROJECT_DIR$/templates/TVShowDescription.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/addMovie.html" afterPath="$PROJECT_DIR$/templates/addMovie.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/addTV.html" afterPath="$PROJECT_DIR$/templates/addTV.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/index.html" afterPath="$PROJECT_DIR$/templates/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/layouts/layout1.html" afterPath="$PROJECT_DIR$/templates/layouts/layout1.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/profile.html" afterPath="$PROJECT_DIR$/templates/profile.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -69,8 +60,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="376">
-              <caret line="22" column="51" lean-forward="false" selection-start-line="22" selection-start-column="51" selection-end-line="22" selection-end-column="51" />
+            <state relative-caret-position="427">
+              <caret line="30" column="84" lean-forward="false" selection-start-line="30" selection-start-column="84" selection-end-line="30" selection-end-column="84" />
               <folding>
                 <element signature="e#0#91#0" expanded="true" />
               </folding>
@@ -78,21 +69,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="reset_password.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/security/reset_password.html">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="6" column="14" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+            <state relative-caret-position="361">
+              <caret line="19" column="4" lean-forward="false" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/style.css">
+      <file leaf-file-name="reset_password.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/security/reset_password.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="812">
-              <caret line="138" column="26" lean-forward="true" selection-start-line="138" selection-start-column="26" selection-end-line="138" selection-end-column="26" />
+            <state relative-caret-position="114">
+              <caret line="6" column="14" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -202,6 +193,7 @@
         <option value="$PROJECT_DIR$/templates/addTV.html" />
         <option value="$PROJECT_DIR$/templates/TVShowDescription.html" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -379,7 +371,28 @@
       <option name="project" value="LOCAL" />
       <updated>1511214756008</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Added recommendation view and UI stuff&#10;- recommondations now works and changed how things look a little">
+      <created>1511400167448</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1511400167448</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Updated Readme to show the list of features">
+      <created>1511407363926</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1511407363927</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Cleaned up main.py">
+      <created>1511407402793</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1511407402793</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -426,7 +439,10 @@
     <MESSAGE value="Changed password for google account" />
     <MESSAGE value="After searching a movie you can now click on the image which will bring you to the movies profile page" />
     <MESSAGE value="Added function &quot;Add to WatchList&quot;&#10;- Users can now add movies to watch list if they're logged in&#10;- Movies Display on users profile" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added function &quot;Add to WatchList&quot;&#10;- Users can now add movies to watch list if they're logged in&#10;- Movies Display on users profile" />
+    <MESSAGE value="Added recommendation view and UI stuff&#10;- recommondations now works and changed how things look a little" />
+    <MESSAGE value="Updated Readme to show the list of features" />
+    <MESSAGE value="Cleaned up main.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up main.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -435,13 +451,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/local/lib/python3.6/site-packages/flask_security/templates/security/send_confirmation.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python3.6/site-packages/flask_security/templates/security/send_login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -788,20 +797,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/security/reset_password.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="14" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="22" column="51" lean-forward="false" selection-start-line="22" selection-start-column="51" selection-end-line="22" selection-end-column="51" />
+        <state relative-caret-position="427">
+          <caret line="30" column="84" lean-forward="false" selection-start-line="30" selection-start-column="84" selection-end-line="30" selection-end-column="84" />
           <folding>
             <element signature="e#0#91#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/security/reset_password.html">
+    <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" column="14" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+        <state relative-caret-position="361">
+          <caret line="19" column="4" lean-forward="false" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
           <folding />
         </state>
       </provider>

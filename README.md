@@ -17,13 +17,13 @@ Create an admin user:
   - Now try and access the /addMovie page again and you should be able to add a movie/TV show now
 
   Feature List:
-  Search
-  Add Movie
-  Add TV Show
-  Login
-  Register
-  Forget Password Email Sent
-  Add Movie/TV Show to watchlist
-  Delete Movie/TV show from watchlist
-  Logout
-  Click on movie/tv show after searching to visit profile page of said movie/tv show
+  - Search
+  - Add Movie
+  - Add TV Show
+  - Login
+  - Register
+  - Forget Password Email Sent
+  - Add Movie/TV Show to watchlist
+  - Delete Movie/TV show from watchlist
+  - Logout
+  - Click on movie/tv show after searching to visit profile page of said movie/tv show
