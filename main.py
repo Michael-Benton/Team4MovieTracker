@@ -4,10 +4,6 @@ from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMix
 from flask_mail import Mail
 from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
-from twilio import twiml
-
-client = nexmo.Client(key='7dc26922', secret='49eba55ddf8b359a')
-client.send_message({'from': 'MovieTVShowTracker', 'to': '5613090671', 'text': 'Hey Alex :)'})
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
@@ -33,16 +29,6 @@ login_manager = LoginManager()
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
                        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
-
-
-@app.route('/sms', methods=['POST'])
-def sms():
-    number = request.form['From']
-    message_body = request.form['Body']
-
-    resp = twiml.Response()
-    resp.message('Hello {}, you said: {}'.format(number, message_body))
-    return str(resp)
 
 
 @app.errorhandler(404)
