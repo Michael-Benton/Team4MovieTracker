@@ -37,7 +37,6 @@ clear: both;
 <div class="row">
 <div class="column" style="background-color:#18bc9c;">
 <h2>Watchlist</h2>
-<p>
 {% for item in movies %}
 <h2 class="movie-title">{{ item.title }}</h2>
 <p>{{ item.releaseDate }}</p>
@@ -53,12 +52,10 @@ clear: both;
         <br /> <br />
           </form>
 {% endfor %}
-</p>
 </div>
 
 <div class="column" style="background-color:#2c3e50;">
 <h2>Recommendations</h2>
-<p>
 {% for item in recommendations %}
 <h2 class="movie-title">{{ item.title }}</h2>
 <p>{{ item.releaseDate }}</p>
@@ -69,7 +66,6 @@ clear: both;
     {% endif %}
     <br />
 {% endfor %}
-</p>
 </div>
 </div>
 </body>

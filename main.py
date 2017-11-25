@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Silvertigger97!@localhost:5432/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_RECOVERABLE'] = True
@@ -29,16 +29,6 @@ login_manager = LoginManager()
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
                        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
-
-
-@app.errorhandler(404)
-def pageNotFound(error):
-    return "page not found"
-
-
-@app.errorhandler(500)
-def duplicateFound(error):
-    return "500 Internal Server Error"
 
 
 class Role(db.Model, RoleMixin):
@@ -366,6 +356,12 @@ def post_Movie():
     newItem = Movie(title=(request.form['title']).upper(), releaseDate=request.form['releaseDate'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
+    movies = Movie.query.all()
+    i = 0
+    while i < len(movies):
+        if movies[i].title == newItem.title:
+            return redirect(url_for('movieDuplicate'))
+
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))
@@ -376,9 +372,26 @@ def post_TVShow():
     newItem = TV(title=request.form['title'], releaseDate=request.form['releaseDate'],
                       producer=request.form['producer'], description=request.form['description'],
                       genre=request.form['genre'], image=request.form['image'])
+
+    shows = TV.query.all()
+    i = 0
+    while i < len(shows):
+        if shows[i].title == newItem.title:
+            return redirect(url_for('showDuplicate'))
+
     db.session.add(newItem)
     db.session.commit()
     return redirect(url_for('index'))
+
+
+@app.route('/movieDuplicateFound')
+def movieDuplicate():
+    return render_template("movieDuplicateFound.html")
+
+
+@app.route('/showDuplicateFound')
+def showDuplicate():
+    return render_template("showDuplicateFound.html")
 
 
 if __name__ == '__main__':
