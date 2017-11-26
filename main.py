@@ -394,5 +394,45 @@ def showDuplicate():
     return render_template("showDuplicateFound.html")
 
 
+def test_new_user():
+    try:
+        user = User(first_name='firstName', last_name='lastName', email='teergergmail@tester.com', password='abc123',
+                is_admin=True)
+        db.session.add(user)
+        db.session.commit()
+        return 200
+    except exc.SQLAlchemyError:
+        sys.exit("Could not add user to Database")
+
+
+def test_add_movie():
+    try:
+        movie = Movie(title=('Star Wars: A New Hope').upper(), releaseDate='11/16/2017',
+                      producer='producer name', description="Luke Skywalker joins forces with a Jedi Knight, a cocky "
+                                                            "pilot, a Wookiee and two droids to save the galaxy from "
+                                                            "the Empire's world-destroying battle-station while also "
+                                                            "attempting to rescue Princess Leia from the evil Darth "
+                                                            "Vader.",
+                      genre='Scifi', image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+        db.session.add(movie)
+        db.session.commit()
+        return 200
+    except exc.SQLAlchemyError:
+        sys.exit("Could not add movie to Database")
+
+
+def test_add_tv_show():
+    try:
+        show = TV(title='Rick and Morty', releaseDate='11/17/2018,09:00 PM',
+              producer='Dan Harmon', description="An animated series that follows the exploits of a "
+                                                             "super scientist and his not-so-bright grandson.",
+              genre='Scifi', image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+        db.session.add(show)
+        db.session.commit()
+        return 200
+    except exc.SQLAlchemyError:
+        sys.exit("Could not add tv show to Database")
+
+
 if __name__ == '__main__':
     app.run()
