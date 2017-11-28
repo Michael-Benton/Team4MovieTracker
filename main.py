@@ -458,7 +458,6 @@ def test_add_movie():
                       "Princess Leia from the evil Darth Vader.",
                       genre='Scifi',
                       image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
-                      genre='Scifi',
         db.session.add(movie)
         db.session.commit()
         return 200
