@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, abort, flash, session, json
 from flask_sqlalchemy import SQLAlchemy
-from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
+from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, auth_token_required
 from flask_mail import Mail
 from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
@@ -252,59 +252,53 @@ def deleteFromWatchList():
     return redirect(url_for('profile', id=current_user.id, movies=watchList.query.all()))
 
 
-
-@app.route('/getUserWatchList', methods=["GET"])
-def getUserWatchList():
-    user_watchList = []
-
-    return user_watchList
-
-
-@app.route('/profile/<id>')
-@login_required
-def profile(id):
+def getUserWatchList(id):
     watchList_results = watchList.query.all()
     all_movies = Movie.query.all()
     all_shows = TV.query.all()
     listItems = []
-    recommendationList = []
-    movie_list = []
-    tv_show_list = []
-    last_entry_genre = None
-    i = 0
 
+    i = 0
     if len(watchList_results) != 0:
         while i < len(watchList_results):
             if int(watchList_results[i].user_id) == int(id):
                 listItems.append(watchList_results[i])
             i += 1
-        if len(listItems) != 0:
-            last_entry = listItems[len(listItems) - 1]
-            last_entry_genre = last_entry.genre
+
+    return listItems
 
 
-        i = 0
+def getReccomendations(wl):
 
-        while i < len(watchList_results):
-            j = 0
-            while j < len(all_movies):
-                if all_movies[j].movie_id == watchList_results[i].movie_id:
-                    all_movies.remove(all_movies[j])
-                j += 1
-            i += 1
+    movie_list = []
+    tv_show_list = []
+    last_entry_genre = None
+    all_movies = Movie.query.all()
+    all_shows = TV.query.all()
 
-        i = 0
+    i = 0
+    while i < len(wl):
+        j = 0
+        while j < len(all_movies):
+            if all_movies[j].movie_id == wl[i].movie_id:
+                all_movies.remove(all_movies[j])
+            j += 1
+        i += 1
 
-        while i < len(watchList_results):
+    i = 0
+    while i < len(wl):
             j = 0
             while j < len(all_shows):
-                if all_shows[j].tv_id == watchList_results[i].tv_id:
+                if all_shows[j].tv_id == wl[i].tv_id:
                     all_shows.remove(all_shows[j])
                 j += 1
             i += 1
 
-        i = 0
+    if len(wl) != 0:
+        last_entry = wl[len(wl) - 1]
+        last_entry_genre = last_entry.genre
 
+        i = 0
         while i < len(all_movies):
             if all_movies[i].genre == last_entry_genre:
                 movie_list.append(all_movies[i])
@@ -313,7 +307,6 @@ def profile(id):
             i += 1
 
         i = 0
-
         while i < len(all_shows):
             if all_shows[i].genre == last_entry_genre:
                 tv_show_list.append(all_shows[i])
@@ -321,9 +314,21 @@ def profile(id):
                 break
             i += 1
 
-        recommendationList = tv_show_list + movie_list
+    return tv_show_list + movie_list
 
-    return render_template('profile.html', movies=listItems, recommendations=recommendationList)
+
+@app.route('/profile/<id>')
+@login_required
+def profile(id):
+
+    wl = []
+    recommendationList = []
+
+    wl = getUserWatchList(int(id))
+    recommendationList = getReccomendations(wl)
+
+    return render_template('profile.html', movies=wl,
+                           recommendations=recommendationList)
 
 
 @app.route('/post_user', methods=['POST'])
@@ -398,6 +403,10 @@ def post_TVShow():
     db.session.commit()
     return redirect(url_for('index'))
 
+@app.route('/getAppWatchlist<id>', methods=['GET'])
+@auth_token_required
+def getAppWatchlist(id):
+    return json.dumps(getUserWatchList, cls=AlchemyEncoder)
 
 @app.route('/movieDuplicateFound')
 def movieDuplicate():
@@ -447,7 +456,9 @@ def test_add_movie():
                       "save the galaxy from the Empire's world-destroying "
                       "battle-station while also attempting to rescue "
                       "Princess Leia from the evil Darth Vader.",
-                      genre='Scifi', image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+                      genre='Scifi',
+                      image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+                      genre='Scifi',
         db.session.add(movie)
         db.session.commit()
         return 200
@@ -462,7 +473,8 @@ def test_add_tv_show():
                   description="An animated series that follows the exploits"
                                "of a super scientist and his not-so-bright "
                                "grandson.",
-                  genre='Scifi', image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+                  genre='Scifi',
+                  image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
         db.session.add(show)
         db.session.commit()
         return 200
