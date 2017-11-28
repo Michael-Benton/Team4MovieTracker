@@ -6,7 +6,7 @@ from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Silvertigger97!@localhost:5432/flaskmovie'
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_RECOVERABLE'] = True
@@ -361,6 +361,7 @@ def post_Movie():
     while i < len(movies):
         if movies[i].title == newItem.title:
             return redirect(url_for('movieDuplicate'))
+        i += 1
 
     db.session.add(newItem)
     db.session.commit()
@@ -378,6 +379,7 @@ def post_TVShow():
     while i < len(shows):
         if shows[i].title == newItem.title:
             return redirect(url_for('showDuplicate'))
+        i += 1
 
     db.session.add(newItem)
     db.session.commit()
