@@ -41,9 +41,9 @@ clear: both;
 <h2 class="movie-title">{{ item.title }}</h2>
 <p>{{ item.releaseDate }}</p>
     {% if item.is_movie == True %}
-    <p><a href="/MovieDescription/{{ item.title }}"><img src="{{ item.image }}" border="0"></a><a></a></p>
+    <p><a href="/MovieDescription/{{ item.title }}"><img src="{{ item.image }}" width="299" height="445" border="0"></a><a></a></p>
     {% else %}
-    <p><a href="/TVShowDescription/{{ item.title }}"><img src="{{ item.image }}" border="0"></a><a></a></p>
+    <p><a href="/TVShowDescription/{{ item.title }}"><img src="{{ item.image }}" width="299" height="445" border="0"></a><a></a></p>
     {% endif %}
     <br />
     <form id="delete-item" action="/deleteFromWatchList" method="post">
@@ -60,9 +60,9 @@ clear: both;
 <h2 class="movie-title">{{ item.title }}</h2>
 <p>{{ item.releaseDate }}</p>
     {% if item.is_movie == True %}
-    <p><a href="/MovieDescription/{{ item.title }}"><img src="{{ item.image }}" border="0"></a><a></a></p>
+    <p><a href="/MovieDescription/{{ item.title }}"><img src="{{ item.image }}" width="299" height="445" border="0"></a><a></a></p>
     {% else %}
-    <p><a href="/TVShowDescription/{{ item.title }}"><img src="{{ item.image }}" border="0"></a><a></a></p>
+    <p><a href="/TVShowDescription/{{ item.title }}"><img src="{{ item.image }}" width="299" height="445" border="0"></a><a></a></p>
     {% endif %}
     <br />
 {% endfor %}

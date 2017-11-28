@@ -56,7 +56,7 @@ class watchList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     movie_id = db.Column(db.Integer, db.ForeignKey('Movie.movie_id'))
     tv_id = db.Column(db.Integer, db.ForeignKey('TV.tv_id'))
-    title = db.Column(db.String(200), unique=True)
+    title = db.Column(db.String(200))
     releaseDate = db.Column(db.Date)
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
@@ -174,37 +174,46 @@ def addToWatchList():
     error=None
     movie_list = Movie.query.all()
     tv_list = TV.query.all()
+    watch_list = watchList.query.all()
     movie = None
     show = None
     i = 0
     j = 0
 
-    while j < len(movie_list):
-        if int(movie_list[i].movie_id) == int(request.form.get('id')):
-            movie = movie_list[i]
+    is_movie = request.form.get('is_movie')
+    is_show = request.form.get('is_show')
 
-        i += 1
-        j += 1
+    if is_movie:
+        while j < len(movie_list):
+            if int(movie_list[i].movie_id) == int(request.form.get('id')):
+                movie = movie_list[i]
+
+            i += 1
+            j += 1
 
     i = 0
     j = 0
 
-    while j < len(tv_list):
-        if int(tv_list[i].tv_id) == int(request.form.get('id')):
-            show = tv_list[i]
-        else:
-            show = None
+    if is_show:
+        while j < len(tv_list):
+            if int(tv_list[i].tv_id) == int(request.form.get('id')):
+                show = tv_list[i]
+            else:
+                show = None
 
-        i += 1
-        j += 1
+            i += 1
+            j += 1
 
     if show is None:
+        if len(watch_list) != 0:
+            if db.session.query(watchList).filter(watchList.movie_id == movie.movie_id,
+                                                  watchList.user_id == current_user.id).first():
+                error = 'Movie is already in your watchlist'
+                return redirect(url_for('MovieDescription', title=movie.title, error=error))
 
-        if db.session.query(watchList).filter(watchList.movie_id == movie.movie_id, watchList.user_id == current_user.id).first():
-            error = 'Movie is already in your watchlist'
-            return redirect(url_for('MovieDescription', title=movie.title, error=error))
-
-        movieItem = watchList(user_id=current_user.id,movie_id=movie.movie_id, tv_id=None, title=movie.title, releaseDate=movie.releaseDate, producer=movie.producer, description=movie.description, genre=movie.genre, image=movie.image)
+        movieItem = watchList(user_id=current_user.id,movie_id=movie.movie_id, tv_id=None, title=movie.title,
+                              releaseDate=movie.releaseDate, producer=movie.producer, description=movie.description,
+                              genre=movie.genre, image=movie.image)
         db.session.add(movieItem)
         db.session.commit()
 
@@ -212,12 +221,15 @@ def addToWatchList():
         return redirect(url_for('profile', id=current_user.id, movies=watchList.query.all()))
 
     else:
-        if db.session.query(watchList).filter(watchList.tv_id == show.tv_id,
-                                              watchList.user_id == current_user.id).first():
-            error = 'TV Show is already in your watchlist'
-            return redirect(url_for('TVShowDescription', title=show.title, error=error))
+        if len(watch_list) != 0:
+            if db.session.query(watchList).filter(watchList.tv_id == show.tv_id,
+                                                  watchList.user_id == current_user.id).first():
+                error = 'TV Show is already in your watchlist'
+                return redirect(url_for('TVShowDescription', title=show.title, error=error))
 
-        showItem = watchList(user_id=current_user.id, movie_id=None, tv_id=show.tv_id,title=show.title, releaseDate=show.releaseDate, producer=show.producer, description=show.description, genre=show.genre, image=show.image)
+        showItem = watchList(user_id=current_user.id, movie_id=None, tv_id=show.tv_id,title=show.title,
+                             releaseDate=show.releaseDate, producer=show.producer, description=show.description,
+                             genre=show.genre, image=show.image)
         db.session.add(showItem)
         db.session.commit()
 
@@ -252,10 +264,13 @@ def getUserWatchList():
 @login_required
 def profile(id):
     watchList_results = watchList.query.all()
+    all_movies = Movie.query.all()
+    all_shows = TV.query.all()
     listItems = []
     recommendationList = []
     movie_list = []
     tv_show_list = []
+    last_entry_genre = None
     i = 0
 
     if len(watchList_results) != 0:
@@ -263,11 +278,9 @@ def profile(id):
             if int(watchList_results[i].user_id) == int(id):
                 listItems.append(watchList_results[i])
             i += 1
-
-        last_entry = listItems[len(listItems) - 1]
-        last_entry_genre = last_entry.genre
-        all_movies = Movie.query.all()
-        all_shows = TV.query.all()
+        if len(listItems) != 0:
+            last_entry = listItems[len(listItems) - 1]
+            last_entry_genre = last_entry.genre
 
 
         i = 0
@@ -361,6 +374,7 @@ def post_Movie():
     while i < len(movies):
         if movies[i].title == newItem.title:
             return redirect(url_for('movieDuplicate'))
+        i += 1
 
     db.session.add(newItem)
     db.session.commit()
@@ -378,6 +392,7 @@ def post_TVShow():
     while i < len(shows):
         if shows[i].title == newItem.title:
             return redirect(url_for('showDuplicate'))
+        i += 1
 
     db.session.add(newItem)
     db.session.commit()

@@ -8,3 +8,8 @@
 div.container {
     margin-top: 100px;
 }
+
+img {
+	max-width:100%;
+	height:auto;
+}

@@ -117,6 +117,10 @@ a {
     color: #1989ac;
   }
 
+img {
+	max-width:100%;
+	height:auto;
+}
 
 a:link {
     color: #1989ac;

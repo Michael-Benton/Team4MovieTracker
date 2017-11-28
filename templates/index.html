@@ -65,10 +65,10 @@ Index
             <p>{{ result.producer }}</p>
             <p>{{ result.genre }}</p>
             {% if result.is_movie == True %}
-              <p><a href="/MovieDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
+              <p><a href="/MovieDescription/{{ result.title }}"><img src="{{ result.image }}" width="299" height="445" border="0"></a><br /><a></a><br /></p>
             {% endif %}
             {%if result.is_show == True %}
-              <p><a href="/TVShowDescription/{{ result.title }}"><img src="{{ result.image }}" border="0"></a><br /><a></a><br /></p>
+              <p><a href="/TVShowDescription/{{ result.title }}"><img src="{{ result.image }}" width="299" height="445" border="0"></a><br /><a></a><br /></p>
             {% endif %}
           </div>
           {% endfor %}
