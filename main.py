@@ -183,7 +183,7 @@ def addToWatchList():
     is_movie = request.form.get('is_movie')
     is_show = request.form.get('is_show')
 
-    if is_movie:
+    if is_movie == 'True':
         while j < len(movie_list):
             if int(movie_list[i].movie_id) == int(request.form.get('id')):
                 movie = movie_list[i]
@@ -194,12 +194,10 @@ def addToWatchList():
     i = 0
     j = 0
 
-    if is_show:
+    if is_show == 'True':
         while j < len(tv_list):
             if int(tv_list[i].tv_id) == int(request.form.get('id')):
                 show = tv_list[i]
-            else:
-                show = None
 
             i += 1
             j += 1
