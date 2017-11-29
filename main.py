@@ -1,10 +1,12 @@
-from flask import Flask, render_template, url_for, redirect, request, abort, flash, session, json
+from flask import Flask, render_template, url_for, redirect, request, abort, flash, json
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, auth_token_required
 from flask_mail import Mail
+import sys
 from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
 from sqlalchemy.ext.declarative import DeclarativeMeta
+from sqlalchemy import exc
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
@@ -48,7 +50,6 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255))
     is_admin = db.Column(db.Boolean(), default=False)
     active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 
@@ -254,8 +255,6 @@ def deleteFromWatchList():
 
 def getUserWatchList(id):
     watchList_results = watchList.query.all()
-    all_movies = Movie.query.all()
-    all_shows = TV.query.all()
     listItems = []
 
     i = 0
@@ -272,7 +271,6 @@ def getReccomendations(wl):
 
     movie_list = []
     tv_show_list = []
-    last_entry_genre = None
     all_movies = Movie.query.all()
     all_shows = TV.query.all()
 
@@ -320,9 +318,6 @@ def getReccomendations(wl):
 @app.route('/profile/<id>')
 @login_required
 def profile(id):
-
-    wl = []
-    recommendationList = []
 
     wl = getUserWatchList(int(id))
     recommendationList = getReccomendations(wl)
@@ -436,6 +431,7 @@ class AlchemyEncoder(json.JSONEncoder):
             return fields
 
         return json.JSONEncoder.default(self, obj)
+
 
 def test_new_user():
     try:
