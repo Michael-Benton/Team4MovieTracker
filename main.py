@@ -403,10 +403,10 @@ def post_TVShow():
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/getAppWatchlist<id>', methods=['GET'])
+@app.route('/getAppWatchlist/<id>', methods=['GET'])
 @auth_token_required
 def getAppWatchlist(id):
-    return json.dumps(getUserWatchList, cls=AlchemyEncoder)
+    return json.dumps(getUserWatchList(int(id)), cls=AlchemyEncoder)
 
 @app.route('/movieDuplicateFound')
 def movieDuplicate():
