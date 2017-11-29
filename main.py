@@ -1,9 +1,10 @@
-from flask import Flask, render_template, url_for, redirect, request, abort, flash, session
+from flask import Flask, render_template, url_for, redirect, request, abort, flash, session, json
 from flask_sqlalchemy import SQLAlchemy
-from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
+from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, auth_token_required
 from flask_mail import Mail
 from flask_security.forms import RegisterForm, StringField, Required
 from flask_login import current_user, LoginManager
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://michaelbenton@localhost:5432/flaskmovie'
@@ -21,6 +22,7 @@ app.config['SECURITY_EMAIL_SENDER'] = 'no-reply@localhost'
 app.config['SECURITY_POST_LOGIN_VIEW'] = 'index'
 app.config['SECURITY_POST_LOGOUT_VIEW'] = 'index'
 app.config['SECURITY_POST_REGISTER_VIEW'] = 'index'
+app.config['WTF_CSRF_ENABLED'] = False
 mail = Mail(app)
 
 db = SQLAlchemy(app)
@@ -57,7 +59,7 @@ class watchList(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey('Movie.movie_id'))
     tv_id = db.Column(db.Integer, db.ForeignKey('TV.tv_id'))
     title = db.Column(db.String(200))
-    releaseDate = db.Column(db.Date)
+    releaseDate = db.Column(db.DateTime())
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
@@ -183,7 +185,7 @@ def addToWatchList():
     is_movie = request.form.get('is_movie')
     is_show = request.form.get('is_show')
 
-    if is_movie:
+    if is_movie == 'True':
         while j < len(movie_list):
             if int(movie_list[i].movie_id) == int(request.form.get('id')):
                 movie = movie_list[i]
@@ -194,12 +196,10 @@ def addToWatchList():
     i = 0
     j = 0
 
-    if is_show:
+    if is_show == 'True':
         while j < len(tv_list):
             if int(tv_list[i].tv_id) == int(request.form.get('id')):
                 show = tv_list[i]
-            else:
-                show = None
 
             i += 1
             j += 1
@@ -252,59 +252,53 @@ def deleteFromWatchList():
     return redirect(url_for('profile', id=current_user.id, movies=watchList.query.all()))
 
 
-
-@app.route('/getUserWatchList', methods=["GET"])
-def getUserWatchList():
-    user_watchList = []
-
-    return user_watchList
-
-
-@app.route('/profile/<id>')
-@login_required
-def profile(id):
+def getUserWatchList(id):
     watchList_results = watchList.query.all()
     all_movies = Movie.query.all()
     all_shows = TV.query.all()
     listItems = []
-    recommendationList = []
-    movie_list = []
-    tv_show_list = []
-    last_entry_genre = None
-    i = 0
 
+    i = 0
     if len(watchList_results) != 0:
         while i < len(watchList_results):
             if int(watchList_results[i].user_id) == int(id):
                 listItems.append(watchList_results[i])
             i += 1
-        if len(listItems) != 0:
-            last_entry = listItems[len(listItems) - 1]
-            last_entry_genre = last_entry.genre
+
+    return listItems
 
 
-        i = 0
+def getReccomendations(wl):
 
-        while i < len(watchList_results):
-            j = 0
-            while j < len(all_movies):
-                if all_movies[j].movie_id == watchList_results[i].movie_id:
-                    all_movies.remove(all_movies[j])
-                j += 1
-            i += 1
+    movie_list = []
+    tv_show_list = []
+    last_entry_genre = None
+    all_movies = Movie.query.all()
+    all_shows = TV.query.all()
 
-        i = 0
+    i = 0
+    while i < len(wl):
+        j = 0
+        while j < len(all_movies):
+            if all_movies[j].movie_id == wl[i].movie_id:
+                all_movies.remove(all_movies[j])
+            j += 1
+        i += 1
 
-        while i < len(watchList_results):
+    i = 0
+    while i < len(wl):
             j = 0
             while j < len(all_shows):
-                if all_shows[j].tv_id == watchList_results[i].tv_id:
+                if all_shows[j].tv_id == wl[i].tv_id:
                     all_shows.remove(all_shows[j])
                 j += 1
             i += 1
 
-        i = 0
+    if len(wl) != 0:
+        last_entry = wl[len(wl) - 1]
+        last_entry_genre = last_entry.genre
 
+        i = 0
         while i < len(all_movies):
             if all_movies[i].genre == last_entry_genre:
                 movie_list.append(all_movies[i])
@@ -313,7 +307,6 @@ def profile(id):
             i += 1
 
         i = 0
-
         while i < len(all_shows):
             if all_shows[i].genre == last_entry_genre:
                 tv_show_list.append(all_shows[i])
@@ -321,9 +314,21 @@ def profile(id):
                 break
             i += 1
 
-        recommendationList = tv_show_list + movie_list
+    return tv_show_list + movie_list
 
-    return render_template('profile.html', movies=listItems, recommendations=recommendationList)
+
+@app.route('/profile/<id>')
+@login_required
+def profile(id):
+
+    wl = []
+    recommendationList = []
+
+    wl = getUserWatchList(int(id))
+    recommendationList = getReccomendations(wl)
+
+    return render_template('profile.html', movies=wl,
+                           recommendations=recommendationList)
 
 
 @app.route('/post_user', methods=['POST'])
@@ -398,6 +403,10 @@ def post_TVShow():
     db.session.commit()
     return redirect(url_for('index'))
 
+@app.route('/getAppWatchlist/<id>', methods=['GET'])
+@auth_token_required
+def getAppWatchlist(id):
+    return json.dumps(getUserWatchList(int(id)), cls=AlchemyEncoder)
 
 @app.route('/movieDuplicateFound')
 def movieDuplicate():
@@ -408,6 +417,25 @@ def movieDuplicate():
 def showDuplicate():
     return render_template("showDuplicateFound.html")
 
+
+class AlchemyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj.__class__, DeclarativeMeta):
+            # an SQLAlchemy class
+            fields = {}
+            for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
+                data = obj.__getattribute__(field)
+                if field == "releaseDate":
+                    data = data.isoformat()
+                try:
+                    json.dumps(data) # this will fail on non-encodable values, like other classes
+                    fields[field] = data
+                except TypeError:
+                    fields[field] = None
+            # a json-encodable dict
+            return fields
+
+        return json.JSONEncoder.default(self, obj)
 
 def test_new_user():
     try:
@@ -422,13 +450,16 @@ def test_new_user():
 
 def test_add_movie():
     try:
-        movie = Movie(title=('Star Wars: A New Hope').upper(), releaseDate='11/16/2017',
-                      producer='producer name', description="Luke Skywalker joins forces with a Jedi Knight, a cocky "
-                                                            "pilot, a Wookiee and two droids to save the galaxy from "
-                                                            "the Empire's world-destroying battle-station while also "
-                                                            "attempting to rescue Princess Leia from the evil Darth "
-                                                            "Vader.",
-                      genre='Scifi', image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+        movie = Movie(title=('Star Wars: A New Hope').upper(),
+                      releaseDate='11/16/2017',
+                      producer='producer name',
+                      description="Luke Skywalker joins forces with a Jedi "
+                      "Knight, a cocky pilot, a Wookiee and two droids to "
+                      "save the galaxy from the Empire's world-destroying "
+                      "battle-station while also attempting to rescue "
+                      "Princess Leia from the evil Darth Vader.",
+                      genre='Scifi',
+                      image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
         db.session.add(movie)
         db.session.commit()
         return 200
@@ -439,9 +470,12 @@ def test_add_movie():
 def test_add_tv_show():
     try:
         show = TV(title='Rick and Morty', releaseDate='11/17/2018,09:00 PM',
-              producer='Dan Harmon', description="An animated series that follows the exploits of a "
-                                                             "super scientist and his not-so-bright grandson.",
-              genre='Scifi', image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
+                  producer='Dan Harmon',
+                  description="An animated series that follows the exploits"
+                               "of a super scientist and his not-so-bright "
+                               "grandson.",
+                  genre='Scifi',
+                  image='https://image.ibb.co/gBPcv6/51gl8_QQETFL_SY445.jpg')
         db.session.add(show)
         db.session.commit()
         return 200
