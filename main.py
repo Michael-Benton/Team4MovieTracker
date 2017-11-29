@@ -59,7 +59,7 @@ class watchList(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey('Movie.movie_id'))
     tv_id = db.Column(db.Integer, db.ForeignKey('TV.tv_id'))
     title = db.Column(db.String(200))
-    releaseDate = db.Column(db.Date)
+    releaseDate = db.Column(db.DateTime())
     producer = db.Column(db.String(100))
     description = db.Column(db.String(300))
     genre = db.Column(db.String(50))
@@ -425,6 +425,8 @@ class AlchemyEncoder(json.JSONEncoder):
             fields = {}
             for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
                 data = obj.__getattribute__(field)
+                if field == "releaseDate":
+                    data = data.isoformat()
                 try:
                     json.dumps(data) # this will fail on non-encodable values, like other classes
                     fields[field] = data
