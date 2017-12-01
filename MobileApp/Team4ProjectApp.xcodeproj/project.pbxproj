@@ -10,6 +10,7 @@
 		021D65871FC653B80051EE88 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021D65861FC653B80051EE88 /* LoginViewController.swift */; };
 		021D66FD1FC68F6B0051EE88 /* WebAppApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021D66FC1FC68F6B0051EE88 /* WebAppApi.swift */; };
 		021D67001FCD42D70051EE88 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 021D66FF1FCD42D60051EE88 /* AppUser.swift */; };
+		0221DE071FCEF74F007D5ECF /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0221DE061FCEF74F007D5ECF /* Utilities.swift */; };
 		022205B31FBA9EE4001C25EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022205B21FBA9EE4001C25EA /* AppDelegate.swift */; };
 		022205B51FBA9EE4001C25EA /* WatchlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022205B41FBA9EE4001C25EA /* WatchlistViewController.swift */; };
 		022205BA1FBA9EE4001C25EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 022205B81FBA9EE4001C25EA /* Main.storyboard */; };
@@ -22,6 +23,7 @@
 		021D65861FC653B80051EE88 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		021D66FC1FC68F6B0051EE88 /* WebAppApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAppApi.swift; sourceTree = "<group>"; };
 		021D66FF1FCD42D60051EE88 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
+		0221DE061FCEF74F007D5ECF /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		022205AF1FBA9EE4001C25EA /* Team4ProjectApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Team4ProjectApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		022205B21FBA9EE4001C25EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		022205B41FBA9EE4001C25EA /* WatchlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +50,7 @@
 			children = (
 				021D66FC1FC68F6B0051EE88 /* WebAppApi.swift */,
 				021D66FF1FCD42D60051EE88 /* AppUser.swift */,
+				0221DE061FCEF74F007D5ECF /* Utilities.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -173,6 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				021D66FD1FC68F6B0051EE88 /* WebAppApi.swift in Sources */,
+				0221DE071FCEF74F007D5ECF /* Utilities.swift in Sources */,
 				022205B31FBA9EE4001C25EA /* AppDelegate.swift in Sources */,
 				022205B51FBA9EE4001C25EA /* WatchlistViewController.swift in Sources */,
 				021D67001FCD42D70051EE88 /* AppUser.swift in Sources */,

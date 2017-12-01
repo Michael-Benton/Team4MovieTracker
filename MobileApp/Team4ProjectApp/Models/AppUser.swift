@@ -15,6 +15,7 @@ final class AppUser {
   var password: String
   var auth_token: String
   var watchlist: [movieTVEntry]?
+  var notifications: [Date]?
   
   struct movieTVEntry : Codable {
     let id: Int

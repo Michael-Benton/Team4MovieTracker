@@ -12,13 +12,30 @@ class LoginViewController: UIViewController {
 
   private let appDelegate = UIApplication.shared.delegate as! AppDelegate
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    self.view.backgroundColor = UIColor.darkGray
-  }
-
+  @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var emailTF: UITextField!
   @IBOutlet weak var passwordTF: UITextField!
+  @IBOutlet weak var submitButton: UIButton!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    self.view.backgroundColor = UIColor.darkGray
+    
+//    titleLabel.layer.addBorder(edge: .bottom, color: UIColor.black, thickness: 2)
+    titleLabel.layer.borderWidth = 2
+    titleLabel.layer.borderColor = UIColor.black.cgColor
+    
+    submitButton.layer.backgroundColor = UIColor.lightGray.cgColor
+    submitButton.layer.borderWidth = 1
+    submitButton.layer.borderColor = UIColor.black.cgColor
+    submitButton.layer.cornerRadius = 15
+
+  }
+  
+  override func viewDidLayoutSubviews() {
+    titleLabel.layer.frame = titleLabel.frame
+  }
   
   @IBAction func submitButton(_ sender: UIButton) {
     appDelegate.user = AppUser.initUserFromWebApp(email: emailTF.text!,
@@ -29,6 +46,7 @@ class LoginViewController: UIViewController {
       self.present(nextViewController, animated: true, completion: nil)
     }
     else {
+      
       let alert = UIAlertController(
         title: "Login Failed",
         message: "Please try again.",
@@ -52,3 +70,4 @@ class LoginViewController: UIViewController {
     }
   }
 }
+
