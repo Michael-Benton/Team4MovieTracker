@@ -75,14 +75,11 @@ class WatchlistViewController: UIViewController {
         print("Notifiation type could not be identified")
         return
       }
-      
-      let test = UNTimeIntervalNotificationTrigger(timeInterval: 5,
-                                                      repeats: false)
-      
+
       let center = UNUserNotificationCenter.current()
       let identifier = "MovieTVNotification\(index)"
       let request = UNNotificationRequest(identifier: identifier,
-                                          content: content, trigger: test)
+                                          content: content, trigger: trigger)
       
       
       center.add(request, withCompletionHandler: { (error) in
